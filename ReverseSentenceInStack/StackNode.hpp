@@ -20,7 +20,7 @@ public:
 	{
 
 	}
-	LISTNODE getData() const
+	STACKNODE getData() const
 	{
 		return data;
 	}
