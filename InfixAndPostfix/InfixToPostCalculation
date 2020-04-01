@@ -1,0 +1,143 @@
+/*    
+    name: jianxin zhu
+    Compiler: Visual studio 2019
+    date: 03/31/2020
+    
+    
+    
+    Author:  Siidney Watson - siidney.watson.work@gmail.com
+    Organization:  LolaDog Studio
+ */
+ 
+#include"STACK.h"
+
+#include<iostream>
+#include<string>
+using namespace std;
+
+
+bool isOperator(const char& c)
+{
+	if (c == '+' || c == '-' || c == '/' || c == '*' || c == '%'|| c == '^')
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+bool precedence(const char& operator1, const char& operator2)
+{
+	switch (operator1)
+	{
+	case '+':
+	case '-':
+		return ((operator2 == '-') || (operator2 == '+'));
+	case '*':
+	case '/':
+	case '%':
+		return ((operator2 == '*') || (operator2 == '/')
+			|| (operator2 == '%') || (operator2 == '+')
+			|| (operator2 == '-'));
+	case '^':
+		return true;
+	default:
+		return false;
+	}
+}
+int calculate(const int& x, const char& op, const int& y)
+{
+	switch (op)
+	{
+	case '+':
+		return x + y;
+	case '-':
+		return x - y;
+	case '*':
+		return x * y;
+	case '/':
+		return x / y;
+	case '%':
+		return x % y;
+	default:
+		return false;
+	}
+}
+void convertToPostfix(string& infix, string& postfix)
+{
+	Stack<char>convertList;
+
+	convertList.push('(');
+	infix += ')';
+
+	for (char& c : infix)
+	{
+		if (isdigit(c))
+		{
+			postfix += c;
+		}
+		else if (c == '(')
+		{
+			convertList.push(c);
+		}
+		else if (isOperator(c))
+		{
+			while (isOperator(convertList.stackTop()) && precedence(convertList.stackTop(), c))
+			{
+				postfix += convertList.stackTop();
+				convertList.pop(convertList.stackTop());
+			}
+			convertList.push(c);
+		}
+		else if (c == ')')
+		{
+			while (convertList.stackTop() != '(')
+			{
+				postfix += convertList.stackTop();
+				convertList.pop(convertList.stackTop());
+			}
+			convertList.pop(')');
+		}
+	}
+}
+int postfixCalculation(string& postfix)
+{
+	Stack<int>convertList;
+
+	for (char& c : postfix)
+	{
+		if (isdigit(c))
+		{
+			convertList.push(c-'0');
+		}
+		else if (isOperator(c))
+		{
+			int x = convertList.stackTop();
+			convertList.pop(convertList.stackTop());
+
+			int y = convertList.stackTop();
+			convertList.pop(convertList.stackTop());
+
+			if ((c == '/' || c == '-') && x > y)
+			{
+				convertList.push(calculate(y, c, x));
+			}
+			else
+			{
+				convertList.push(calculate(x, c, y));
+			}
+		}
+	}
+	return convertList.stackTop();
+}
+int main()
+{
+	string infix, postfix;
+	cout << "Enter the Infix expression: ";
+	getline(cin,infix);
+
+	convertToPostfix(infix, postfix);
+	cout << "The postfix expression: " << postfix << endl;
+	cout << "The result is: " << postfixCalculation(postfix) << endl;
+}
