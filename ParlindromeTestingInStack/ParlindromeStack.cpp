@@ -4,37 +4,35 @@ Complier: Visual Studio 2019
  */
  
  
- #include<iostream>
-#include<stack>
+#include"STACK.h"
+
+#include<iostream>
 #include<string>
-
 using namespace std;
-
 
 int main()
 {
-	stack<char>stackList;
-	string first, second;
+	string firstSentence, secondSentence;
 
-	cout << "Enter a sentence: " << endl;
-	getline(cin, first);
+	Stack<char>sentenceList;
 
-	for (char& c : first)
+	cout << "Enter a senstence for palidrome test: ";
+	getline(cin, firstSentence);
+
+	for (char& c : firstSentence)
 	{
-		if (isspace(c) || ispunct(c))
-		{
-			continue;
-		}
-		stackList.push(tolower(c));
+		sentenceList.push(c);
 	}
 
-	while (!stackList.empty())
+	char charValue;
+	while (!sentenceList.stackIsEmpty())
 	{
-		second += stackList.top();
-		stackList.pop();
+		secondSentence += sentenceList.stackTop();
+		sentenceList.pop(charValue);
 	}
 
-	cout << first << " is" << ((first == second) ? " " : " not ") << "a palindrome" << endl;
+	cout << firstSentence << endl;
+	cout << secondSentence << endl;
 
-
+	cout << "The sentence is " << ((firstSentence == secondSentence) ? " Palidrome." : "not Palidrome.") << endl;
 }
