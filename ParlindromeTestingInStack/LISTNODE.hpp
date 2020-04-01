@@ -4,7 +4,7 @@
  */
  
  
- #ifndef LISTNODE_H
+#ifndef LISTNODE_H
 #define LISTNODE_H
 
 template<typename NODETYPE>
